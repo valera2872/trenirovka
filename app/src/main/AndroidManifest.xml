@@ -10,7 +10,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".GrapplingActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
