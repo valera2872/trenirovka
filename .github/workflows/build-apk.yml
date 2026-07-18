@@ -1,0 +1,68 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Expand initial project archive
+        if: ${{ hashFiles('bootstrap/project.part-*') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat bootstrap/project.part-* > project.tar.gz.b64
+          base64 --decode project.tar.gz.b64 > project.tar.gz
+          echo "9a8f3af0d744337c416d5b6810077ccadec4b4e66165abd517140edfaa1806c1  project.tar.gz" | sha256sum --check
+          tar -xzf project.tar.gz
+          rm -rf bootstrap project.tar.gz project.tar.gz.b64
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Android app source" || true
+          git push
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug APK
+        run: gradle :app:assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: bjj-arm-tracker-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
