@@ -12,9 +12,8 @@ import java.util.Map;
 
 /**
  * No-gi grappling presentation layer over the original training tracker.
- *
- * The underlying progression logic and stored preferences remain unchanged so
- * users can install this version over 0.1 without losing workout history.
+ * The grappling build uses a separate application ID so it can be installed
+ * alongside the first BJJ-labelled test build without a signature conflict.
  */
 public class GrapplingActivity extends MainActivity {
     private final Map<String, String> exactReplacements = new LinkedHashMap<>();
