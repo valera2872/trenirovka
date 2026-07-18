@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 
 public class ReminderReceiver extends BroadcastReceiver {
-    public static final String ACTION_REMINDER = "com.valera2872.bjjarm.TRAINING_REMINDER";
+    public static final String ACTION_REMINDER = "com.valera2872.grapplingarm.TRAINING_REMINDER";
     private static final String CHANNEL_ID = "training_reminders";
 
     @Override
