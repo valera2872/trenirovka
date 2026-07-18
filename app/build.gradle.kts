@@ -7,7 +7,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.valera2872.bjjarm"
+        applicationId = "com.valera2872.grapplingarm"
         minSdk = 26
         targetSdk = 35
         versionCode = 2
