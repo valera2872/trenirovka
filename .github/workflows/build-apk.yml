@@ -3,6 +3,9 @@ name: Build Android APK
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'build-info/**'
+      - 'dist/**'
   workflow_dispatch:
 
 permissions:
@@ -66,3 +69,20 @@ jobs:
           name: bjj-arm-tracker-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish build metadata
+        if: ${{ success() }}
+        shell: bash
+        run: |
+          mkdir -p build-info
+          cat > build-info/latest.txt <<EOF
+          run_id=${GITHUB_RUN_ID}
+          commit=${GITHUB_SHA}
+          artifact=bjj-arm-tracker-apk
+          built_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add build-info/latest.txt
+          git commit -m "Record successful APK build" || true
+          git push
