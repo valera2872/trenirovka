@@ -26,11 +26,11 @@ public class ReminderReceiver extends BroadcastReceiver {
                     "Напоминания о тренировках",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Две дополнительные тренировки рук в неделю");
+            channel.setDescription("Две дополнительные тренировки рук для грэпплинга в неделю");
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, MainActivity.class);
+        Intent openApp = new Intent(context, GrapplingActivity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -44,8 +44,8 @@ public class ReminderReceiver extends BroadcastReceiver {
                 : new android.app.Notification.Builder(context);
 
         builder.setSmallIcon(android.R.drawable.ic_popup_reminder)
-                .setContentTitle("Пора укрепить руки")
-                .setContentText("Короткая тренировка BJJ: техника, контроль и без отказа.")
+                .setContentTitle("Пора на тренировку рук")
+                .setContentText("20 минут силовой подготовки для грэпплинга. Технично и без отказа.")
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent);
 
