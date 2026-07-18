@@ -1,4 +1,4 @@
-run_id=29646937436
-commit=5fc0cf99871f8438d8817bf677b32019091fdc48
-artifact=bjj-arm-tracker-apk
-built_at=2026-07-18T13:52:52Z
+run_id=29651098498
+commit=c75ef1e9b8b3d26c811bec620b217298294e58cc
+artifact=grappling-arm-tracker-apk
+built_at=2026-07-18T16:01:30Z
