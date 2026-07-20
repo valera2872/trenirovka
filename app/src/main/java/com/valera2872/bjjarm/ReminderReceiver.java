@@ -32,14 +32,14 @@ public class ReminderReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "Напоминания о тренировках",
+                    "Напоминания о подготовке",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Подготовительное и основное напоминания о тренировках рук");
+            channel.setDescription("Предварительные и основные напоминания о дополнительной подготовке борца");
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, GrapplingV3Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceActivity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -56,12 +56,12 @@ public class ReminderReceiver extends BroadcastReceiver {
             int hour = prefs.getInt("reminder_hour", 18);
             int minute = prefs.getInt("reminder_minute", 30);
             String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-            title = "Сегодня тренировка рук";
-            text = "Запланирована на " + time + ". Проверь восстановление и освободи около 20 минут.";
+            title = "Сегодня дополнительная подготовка";
+            text = "Запланирована на " + time + ". Проверь восстановление и освободи около 20–30 минут.";
             notificationId = 2025;
         } else {
-            title = "Пора на тренировку рук";
-            text = "20 минут силовой подготовки для грэпплинга. Технично и без отказа.";
+            title = "Пора открыть план на сегодня";
+            text = "Силовая подготовка, техническая миссия и состояние — без случайных упражнений и работы до отказа.";
             notificationId = 2026;
         }
 
