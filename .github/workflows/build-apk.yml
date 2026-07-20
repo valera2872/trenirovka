@@ -55,11 +55,16 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Restore stable debug signing key
-        uses: actions/cache@v4
-        with:
-          path: ~/.android/debug.keystore
-          key: grappling-arm-debug-keystore-v1
+      - name: Download fixed AOSP test signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci/aosp-signing
+          curl -fsSL "https://android.googlesource.com/platform/build/+/80ab21490b7e67b4c5d2a2a126d7bedba42b6257/target/product/security/testkey.pk8?format=TEXT" \
+            | base64 --decode > .ci/aosp-signing/testkey.pk8
+          curl -fsSL "https://android.googlesource.com/platform/build/+/80ab21490b7e67b4c5d2a2a126d7bedba42b6257/target/product/security/testkey.x509.pem?format=TEXT" \
+            | base64 --decode > .ci/aosp-signing/testkey.x509.pem
+          openssl x509 -in .ci/aosp-signing/testkey.x509.pem -noout -fingerprint -sha256
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -68,6 +73,22 @@ jobs:
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
+
+      - name: Apply stable AOSP test signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          ORIGINAL="app/build/outputs/apk/debug/app-debug-original.apk"
+          mv "$APK" "$ORIGINAL"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
+            --key .ci/aosp-signing/testkey.pk8 \
+            --cert .ci/aosp-signing/testkey.x509.pem \
+            --v4-signing-enabled false \
+            --out "$APK" \
+            "$ORIGINAL"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK"
+          rm -f "$ORIGINAL"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
