@@ -10,7 +10,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".CombatPerformanceV5Activity"
+            android:name=".CombatPerformanceV6Activity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -20,7 +20,17 @@
         </activity>
 
         <activity
+            android:name=".CombatPerformanceV5Activity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
             android:name=".CombatPerformanceActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name=".BaseStrengthV2Activity"
             android:screenOrientation="portrait"
             android:exported="false" />
 
