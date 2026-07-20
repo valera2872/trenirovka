@@ -64,7 +64,7 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
             View root = getWindow().getDecorView();
             rewriteAndFit(root);
             removePrototypeCard(root);
-            moveProfileBackToTop(root);
+            installProfileTopBack(root);
         } finally {
             polishing = false;
         }
@@ -167,7 +167,7 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
         }
     }
 
-    private void moveProfileBackToTop(View root) {
+    private void installProfileTopBack(View root) {
         SharedPreferences prefs = getSharedPreferences(PROFILE_PREFS, MODE_PRIVATE);
         if (!prefs.getBoolean("profile_complete", false)) return;
         EditText mission = findEditText(root, "Одна техническая миссия на 30 дней");
@@ -175,20 +175,18 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
         LinearLayout page = findPage(mission);
         if (page == null) return;
 
-        Button back = findButton(root, "← Назад без сохранения");
-        if (back == null) back = findButton(root, "← Главный экран");
-        if (back == null) {
-            back = navigationButton("← Главный экран");
+        // Keep the inherited button in its original container so the parent layer
+        // recognises it and does not recreate it on every layout pass.
+        Button inheritedBack = findButton(root, "← Назад без сохранения");
+        if (inheritedBack != null) inheritedBack.setVisibility(View.GONE);
+
+        Button topBack = findTaggedButton(root, "profile-top-back");
+        if (topBack == null) {
+            topBack = navigationButton("← Главный экран");
+            topBack.setTag("profile-top-back");
+            topBack.setOnClickListener(v -> recreate());
+            page.addView(topBack, 0);
         }
-
-        back.setText("← Главный экран");
-        back.setTag("profile-top-back");
-        back.setOnClickListener(v -> recreate());
-
-        ViewParent oldParent = back.getParent();
-        if (oldParent == page && page.indexOfChild(back) == 0) return;
-        if (oldParent instanceof ViewGroup) ((ViewGroup) oldParent).removeView(back);
-        page.addView(back, 0);
     }
 
     private LinearLayout findPage(View view) {
@@ -246,6 +244,18 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
             ViewGroup group = (ViewGroup) view;
             for (int i = 0; i < group.getChildCount(); i++) {
                 Button result = findButton(group.getChildAt(i), exact);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    private Button findTaggedButton(View view, String tag) {
+        if (view instanceof Button && tag.equals(view.getTag())) return (Button) view;
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                Button result = findTaggedButton(group.getChildAt(i), tag);
                 if (result != null) return result;
             }
         }
