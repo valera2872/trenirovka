@@ -10,7 +10,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".CombatPerformanceV6Activity"
+            android:name=".CombatPerformanceV7Activity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -18,6 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".WeeklyPlanActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+
+        <activity
+            android:name=".CombatPerformanceV6Activity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
         <activity
             android:name=".CombatPerformanceV5Activity"
