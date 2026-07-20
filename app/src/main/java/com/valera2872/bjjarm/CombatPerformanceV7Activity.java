@@ -18,7 +18,6 @@ public class CombatPerformanceV7Activity extends CombatPerformanceV6Activity {
     private static final int TEXT = Color.rgb(25, 36, 34);
     private static final int MUTED = Color.rgb(94, 111, 107);
     private static final int PRIMARY = Color.rgb(28, 104, 91);
-    private static final int PRIMARY_DARK = Color.rgb(18, 73, 65);
     private static final int PRIMARY_SOFT = Color.rgb(226, 240, 235);
     private boolean installingWeek;
 
@@ -91,7 +90,17 @@ public class CombatPerformanceV7Activity extends CombatPerformanceV6Activity {
     }
 
     private void addWeekCard(View root) {
-        if (root.findViewWithTag("my-week-card") != null) return;
+        boolean configured = WeekPlanEngine.isConfigured(this);
+        int[] strengthDays = configured ? WeekPlanEngine.chooseStrengthDays(this) : new int[0];
+        WeekPlanEngine.Task today = WeekPlanEngine.taskForDay(this, WeekPlanEngine.todayIndex());
+        String state = configured + "|" + strengthDays.length + "|" + today.title;
+
+        View existing = root.findViewWithTag("my-week-card");
+        if (existing != null && state.contentEquals(existing.getContentDescription())) return;
+        if (existing != null && existing.getParent() instanceof ViewGroup) {
+            ((ViewGroup) existing.getParent()).removeView(existing);
+        }
+
         TextView physicalTitle = findText(root, "Твой физический профиль");
         if (physicalTitle == null || !(physicalTitle.getParent() instanceof LinearLayout)) return;
         View physicalCard = (View) physicalTitle.getParent();
@@ -100,14 +109,13 @@ public class CombatPerformanceV7Activity extends CombatPerformanceV6Activity {
 
         LinearLayout card = vertical(7);
         card.setTag("my-week-card");
+        card.setContentDescription(state);
         card.setPadding(dp(18), dp(17), dp(18), dp(17));
         card.setBackground(rounded(Color.WHITE, 18, 1, Color.rgb(226, 231, 229)));
         card.setElevation(dp(1));
         card.addView(label("Моя неделя", 18, TEXT, true));
 
-        if (WeekPlanEngine.isConfigured(this)) {
-            int[] strengthDays = WeekPlanEngine.chooseStrengthDays(this);
-            WeekPlanEngine.Task today = WeekPlanEngine.taskForDay(this, WeekPlanEngine.todayIndex());
+        if (configured) {
             card.addView(label(
                     "План составлен: " + strengthDays.length + " силовых занятий. Сегодня — «" + today.title + "».",
                     14, MUTED, false));
@@ -117,7 +125,7 @@ public class CombatPerformanceV7Activity extends CombatPerformanceV6Activity {
                     14, MUTED, false));
         }
 
-        Button open = baseButton(WeekPlanEngine.isConfigured(this) ? "Открыть мою неделю" : "Настроить мою неделю");
+        Button open = baseButton(configured ? "Открыть мою неделю" : "Настроить мою неделю");
         open.setOnClickListener(v -> startActivity(new Intent(this, WeeklyPlanActivity.class)));
         card.addView(open);
 
