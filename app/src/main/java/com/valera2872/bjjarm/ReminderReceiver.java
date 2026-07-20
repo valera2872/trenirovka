@@ -35,11 +35,11 @@ public class ReminderReceiver extends BroadcastReceiver {
                     "Напоминания о подготовке",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("Предварительные и основные напоминания о дополнительной подготовке борца");
+            channel.setDescription("Напоминания о персональном плане подготовки борца");
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV6Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV7Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -48,6 +48,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
+        WeekPlanEngine.Task task = WeekPlanEngine.taskForDay(context, WeekPlanEngine.todayIndex());
         String title;
         String text;
         int notificationId;
@@ -56,12 +57,12 @@ public class ReminderReceiver extends BroadcastReceiver {
             int hour = prefs.getInt("reminder_hour", 18);
             int minute = prefs.getInt("reminder_minute", 30);
             String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-            title = "Сегодня дополнительная подготовка";
-            text = "Запланирована на " + time + ". Проверь восстановление и освободи около 20–30 минут.";
+            title = "Сегодня: " + task.title;
+            text = "Плановое время — " + time + ". " + task.details;
             notificationId = 2025;
         } else {
-            title = "Пора открыть план на сегодня";
-            text = "Выбери силовой модуль или отметь техническую миссию. Нагрузка учитывает работу на ковре.";
+            title = task.title;
+            text = task.details;
             notificationId = 2026;
         }
 
