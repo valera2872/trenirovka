@@ -100,8 +100,9 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
                 button.setTextSize(12);
                 button.setPadding(dp(5), 0, dp(5), 0);
                 ViewGroup.LayoutParams params = button.getLayoutParams();
-                if (params != null && params.width > 0) {
-                    params.width = dp(100);
+                int desiredWidth = dp(100);
+                if (params != null && params.width > 0 && params.width != desiredWidth) {
+                    params.width = desiredWidth;
                     button.setLayoutParams(params);
                 }
             }
@@ -178,13 +179,15 @@ public class CombatPerformanceV8Activity extends CombatPerformanceV7Activity {
         if (back == null) back = findButton(root, "← Главный экран");
         if (back == null) {
             back = navigationButton("← Главный экран");
-        } else {
-            ViewParent oldParent = back.getParent();
-            if (oldParent instanceof ViewGroup) ((ViewGroup) oldParent).removeView(back);
-            back.setText("← Главный экран");
         }
+
+        back.setText("← Главный экран");
         back.setTag("profile-top-back");
         back.setOnClickListener(v -> recreate());
+
+        ViewParent oldParent = back.getParent();
+        if (oldParent == page && page.indexOfChild(back) == 0) return;
+        if (oldParent instanceof ViewGroup) ((ViewGroup) oldParent).removeView(back);
         page.addView(back, 0);
     }
 
