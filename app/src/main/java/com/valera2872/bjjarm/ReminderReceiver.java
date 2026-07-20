@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceActivity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV5Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -61,7 +61,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             notificationId = 2025;
         } else {
             title = "Пора открыть план на сегодня";
-            text = "Силовая подготовка, техническая миссия и состояние — без случайных упражнений и работы до отказа.";
+            text = "Выбери силовой модуль или отметь техническую миссию. Нагрузка учитывает работу на ковре.";
             notificationId = 2026;
         }
 
