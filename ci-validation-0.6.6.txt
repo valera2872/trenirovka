@@ -1,0 +1,1 @@
+Validate standalone Combat Performance 0.6.6 architecture, profile persistence and inline voice input.
