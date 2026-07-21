@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +11,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".CombatPerformanceV10Activity"
+            android:name=".CombatPerformanceStableActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -19,75 +20,21 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".CombatPerformanceV11Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceV9Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".WeeklyPlanV3Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceV8Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".WeeklyPlanV2Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".WeeklyPlanActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceV7Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceV6Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceV5Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".CombatPerformanceActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".BaseStrengthV2Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".BaseStrengthActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".GrapplingV4Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".GrapplingV3Activity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+        <activity android:name=".CombatPerformanceV11Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV10Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV9Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".WeeklyPlanV3Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV8Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".WeeklyPlanV2Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".WeeklyPlanActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV7Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV6Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV5Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".BaseStrengthV2Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".BaseStrengthActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".GrapplingV4Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".GrapplingV3Activity" android:screenOrientation="portrait" android:exported="false" />
 
         <receiver
             android:name=".ReminderReceiver"
