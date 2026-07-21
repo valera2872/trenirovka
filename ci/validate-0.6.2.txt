@@ -1,1 +1,2 @@
 Validation trigger for Combat Performance 0.6.2.
+Attempt 2 with captured Gradle output.
