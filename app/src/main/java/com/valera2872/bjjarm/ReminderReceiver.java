@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV8Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV9Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -49,6 +49,8 @@ public class ReminderReceiver extends BroadcastReceiver {
         );
 
         WeekPlanEngine.Task task = WeekPlanEngine.taskForDay(context, WeekPlanEngine.todayIndex());
+        String cleanTitle = cleanTitle(task);
+        String cleanDetails = cleanDetails(task);
         String title;
         String text;
         int notificationId;
@@ -57,12 +59,12 @@ public class ReminderReceiver extends BroadcastReceiver {
             int hour = prefs.getInt("reminder_hour", 18);
             int minute = prefs.getInt("reminder_minute", 30);
             String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-            title = "Сегодня: " + task.title;
-            text = "Плановое время — " + time + ". " + task.details;
+            title = "Сегодня: " + cleanTitle;
+            text = "Плановое время — " + time + ". " + cleanDetails;
             notificationId = 2025;
         } else {
-            title = task.title;
-            text = task.details;
+            title = cleanTitle;
+            text = cleanDetails;
             notificationId = 2026;
         }
 
@@ -82,5 +84,31 @@ public class ReminderReceiver extends BroadcastReceiver {
         } catch (SecurityException ignored) {
             // Notification permission may be disabled by the user.
         }
+    }
+
+    private String cleanTitle(WeekPlanEngine.Task task) {
+        if ("setup".equals(task.kind)) return "Настрой расписание тренировок";
+        if ("arms".equals(task.kind)) return "Руки и хват";
+        if ("base".equals(task.kind)) return "Ноги и корпус";
+        if ("mat".equals(task.kind)) return "Тренировка на ковре";
+        if ("heavy".equals(task.kind)) return "Тяжёлые раунды";
+        if ("competition".equals(task.kind)) return "Соревнование";
+        return "Восстановление";
+    }
+
+    private String cleanDetails(WeekPlanEngine.Task task) {
+        if ("setup".equals(task.kind)) {
+            return "Отметь обычные и тяжёлые дни на ковре, чтобы распределить дополнительную силовую.";
+        }
+        if ("mat".equals(task.kind)) {
+            return "Сегодня попробуй применить технику, которую закрепляешь в течение 30 дней.";
+        }
+        if ("heavy".equals(task.kind)) {
+            return "Дополнительную силовую сегодня не добавляем.";
+        }
+        if ("competition".equals(task.kind)) {
+            return "Без дополнительной силовой. Проверь экипировку и первую задачу на схватку.";
+        }
+        return task.details;
     }
 }
