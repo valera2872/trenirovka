@@ -1,0 +1,1 @@
+Validate Combat Performance 0.8.0 sport specialization, current discipline selection, per-sport fighting chains, and preserved 0.7.0 profile flow.
