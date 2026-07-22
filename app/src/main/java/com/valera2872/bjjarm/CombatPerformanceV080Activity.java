@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -21,6 +22,7 @@ public class CombatPerformanceV080Activity extends CombatPerformanceV070Activity
     private static final String TAG_SPORT_CARD = "sport-focus-card-080";
     private static final String FIGHTING_CARD_TAG = "fighting-system-card";
     private static final String PROFILE_PREFS = "combat_performance_profile";
+    private static final String SYSTEM_PREFS = "combat_fighting_system_v2";
 
     @Override
     public void onContentChanged() {
@@ -31,36 +33,59 @@ public class CombatPerformanceV080Activity extends CombatPerformanceV070Activity
 
     private void applySportSpecialization() {
         View root = getWindow().getDecorView();
-        redirectFightingSystemButtons(root);
-        addSportFocusCard(root);
-    }
+        SharedPreferences profile = getSharedPreferences(PROFILE_PREFS, MODE_PRIVATE);
+        ArrayList<String> sports = profileSports(profile);
+        String active = profile.getString("active_sport", "").trim();
+        if (active.isEmpty() || !sports.contains(active)) active = sports.get(0);
 
-    private void redirectFightingSystemButtons(View view) {
-        if (view instanceof Button) {
-            Button button = (Button) view;
-            String text = button.getText() == null ? "" : button.getText().toString();
-            if ("Открыть систему".equals(text) || "Собрать систему".equals(text)) {
-                button.setOnClickListener(v -> startActivity(new Intent(this, FightingSystemV2Activity.class)));
-            }
-        }
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) redirectFightingSystemButtons(group.getChildAt(i));
-        }
-    }
-
-    private void addSportFocusCard(View root) {
-        if (findTaggedView(root, TAG_SPORT_CARD) != null) return;
         View fightingCard = findTaggedView(root, FIGHTING_CARD_TAG);
+        refreshFightingSystemCard(fightingCard, active);
+        addSportFocusCard(fightingCard, active);
+    }
+
+    private void refreshFightingSystemCard(View fightingCard, String activeSport) {
+        if (!(fightingCard instanceof LinearLayout)) return;
+        LinearLayout card = (LinearLayout) fightingCard;
+        card.removeAllViews();
+        card.addView(label("Моя борцовская система", 18, Color.rgb(25, 36, 34), true));
+        card.addView(label(activeSport, 12, Color.rgb(28, 104, 91), true));
+
+        SharedPreferences system = getSharedPreferences(SYSTEM_PREFS, MODE_PRIVATE);
+        String prefix = SportGuidance.slug(activeSport) + "_";
+        boolean configured = system.getBoolean(prefix + "configured", false);
+        if (configured) {
+            ArrayList<String> parts = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                String value = system.getString(prefix + "step_" + i, "").trim();
+                if (!value.isEmpty()) parts.add(value);
+            }
+            String compact = TextUtils.join("  →  ", parts);
+            if (!compact.isEmpty()) {
+                card.addView(label(compact, 15, Color.rgb(25, 36, 34), false));
+            }
+            card.addView(label(
+                    "У каждой выбранной дисциплины хранится своя рабочая цепочка.",
+                    13, Color.rgb(94, 111, 107), false));
+        } else {
+            card.addView(label(
+                    SportGuidance.description(activeSport),
+                    14, Color.rgb(94, 111, 107), false));
+        }
+
+        Button open = styledButton(configured ? "Открыть цепочку" : "Собрать цепочку",
+                Color.WHITE, Color.rgb(28, 104, 91), 15, 52);
+        open.setOnClickListener(v -> startActivity(new Intent(this, FightingSystemV2Activity.class)));
+        card.addView(open);
+    }
+
+    private void addSportFocusCard(View fightingCard, String active) {
         if (fightingCard == null) return;
         ViewParent parent = fightingCard.getParent();
         if (!(parent instanceof LinearLayout)) return;
         LinearLayout page = (LinearLayout) parent;
 
-        SharedPreferences profile = getSharedPreferences(PROFILE_PREFS, MODE_PRIVATE);
-        ArrayList<String> sports = profileSports(profile);
-        String active = profile.getString("active_sport", "").trim();
-        if (active.isEmpty() || !sports.contains(active)) active = sports.get(0);
+        View existing = findTaggedView(page, TAG_SPORT_CARD);
+        if (existing != null) page.removeView(existing);
 
         LinearLayout card = vertical(9);
         card.setTag(TAG_SPORT_CARD);
