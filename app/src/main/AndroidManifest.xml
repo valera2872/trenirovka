@@ -11,7 +11,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".CombatPerformanceV080Activity"
+            android:name=".CombatPerformanceV090Activity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -20,6 +20,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".TrainingDiaryActivity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".CombatPerformanceV080Activity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".SportFocusActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".FightingSystemV2Activity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".CombatPerformanceV070Activity" android:screenOrientation="portrait" android:exported="false" />
