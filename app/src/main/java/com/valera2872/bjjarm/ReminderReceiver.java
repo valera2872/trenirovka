@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV080Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV090Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -101,13 +101,13 @@ public class ReminderReceiver extends BroadcastReceiver {
             return "Отметь обычные и тяжёлые дни на ковре, чтобы распределить дополнительную силовую.";
         }
         if ("mat".equals(task.kind)) {
-            return "Сегодня попробуй применить технику, которую закрепляешь в течение 30 дней.";
+            return "Открой дневник перед тренировкой, посмотри текущую задачу и после ковра запиши результат.";
         }
         if ("heavy".equals(task.kind)) {
             return "Дополнительную силовую сегодня не добавляем.";
         }
         if ("competition".equals(task.kind)) {
-            return "Без дополнительной силовой. Открой личный план перед выходом.";
+            return "Без дополнительной силовой. После схватки сохрани результат и главный вывод в дневнике.";
         }
         return task.details;
     }
