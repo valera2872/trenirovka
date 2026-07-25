@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-/** Shared 0.9.1 visual system: warm background, strong typography and adaptive controls. */
+/** Shared visual system: warm background, strong typography and adaptive controls. */
 public final class PremiumUi {
     public static final int BG = Color.rgb(244, 241, 235);
     public static final int SURFACE = Color.rgb(255, 253, 249);
@@ -184,7 +184,13 @@ public final class PremiumUi {
     }
 
     public static Button secondaryButton(Context context, String value) {
-        return button(context, value, ACCENT_DARK, ACCENT_SOFT, 14, 54, 0, Color.TRANSPARENT);
+        Button button = button(context, value, ACCENT_DARK, ACCENT_SOFT, 14, 54, 0, Color.TRANSPARENT);
+        if ("RU".equals(value)) {
+            button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mic_premium, 0, 0, 0);
+            button.setCompoundDrawablePadding(dp(context, 4));
+            button.setContentDescription("Голосовой ввод на русском языке");
+        }
+        return button;
     }
 
     public static Button outlineButton(Context context, String value) {
