@@ -3,7 +3,6 @@ package com.valera2872.bjjarm;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,8 +112,7 @@ public class CombatPerformanceV096Activity extends CombatPerformanceV093Activity
         if (!(view instanceof ViewGroup)) return;
         ViewGroup group = (ViewGroup) view;
         for (int i = group.getChildCount() - 1; i >= 0; i--) {
-            View child = group.getChildAt(i);
-            replaceTechniqueControls(child);
+            replaceTechniqueControls(group.getChildAt(i));
         }
 
         if (!(view instanceof LinearLayout)) return;
@@ -134,6 +132,7 @@ public class CombatPerformanceV096Activity extends CombatPerformanceV093Activity
         row.setOrientation(LinearLayout.VERTICAL);
         row.setGravity(Gravity.FILL_HORIZONTAL);
         row.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+        controls.removeAllViews();
         row.removeAllViews();
 
         field.setLayoutParams(new LinearLayout.LayoutParams(
