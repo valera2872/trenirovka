@@ -227,7 +227,15 @@ public final class PremiumUi {
         button.setMinHeight(dp(context, minHeight));
         button.setMinimumHeight(dp(context, minHeight));
         button.setPadding(dp(context, 13), dp(context, 7), dp(context, 13), dp(context, 7));
-        button.setAutoSizeTextTypeUniformWithConfiguration(12, textSize, 1, TypedValue.COMPLEX_UNIT_SP);
+
+        // Android requires max auto-size text to be strictly greater than min.
+        // Navigation buttons use 12sp, so the old fixed 12..textSize range became
+        // 12..12 and crashed the dashboard immediately after profile saving.
+        int autoSizeMin = Math.max(9, textSize - 3);
+        int autoSizeMax = Math.max(autoSizeMin + 1, textSize);
+        button.setAutoSizeTextTypeUniformWithConfiguration(
+                autoSizeMin, autoSizeMax, 1, TypedValue.COMPLEX_UNIT_SP);
+
         button.setBackground(rounded(fill, 16, stroke, strokeColor));
         return button;
     }
