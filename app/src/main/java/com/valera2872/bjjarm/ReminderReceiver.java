@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV092Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV093Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -90,7 +90,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         if ("setup".equals(task.kind)) return "Настрой расписание тренировок";
         if ("arms".equals(task.kind)) return "Руки и хват";
         if ("base".equals(task.kind)) return "Ноги и корпус";
-        if ("mat".equals(task.kind)) return "Тренировка на ковре";
+        if ("mat".equals(task.kind)) return "Тренировка по борьбе";
         if ("heavy".equals(task.kind)) return "Тяжёлые раунды";
         if ("competition".equals(task.kind)) return "Соревнование";
         return "Восстановление";
@@ -98,10 +98,10 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     private String cleanDetails(WeekPlanEngine.Task task) {
         if ("setup".equals(task.kind)) {
-            return "Отметь обычные и тяжёлые дни на ковре, чтобы распределить дополнительную силовую.";
+            return "Отметь обычные и тяжёлые тренировки, чтобы распределить персональную силовую нагрузку.";
         }
         if ("mat".equals(task.kind)) {
-            return "Открой дневник перед тренировкой, посмотри текущую задачу и после ковра запиши результат.";
+            return "Посмотри текущую задачу, а после тренировки сохрани короткий разбор в дневнике.";
         }
         if ("heavy".equals(task.kind)) {
             return "Дополнительную силовую сегодня не добавляем.";
