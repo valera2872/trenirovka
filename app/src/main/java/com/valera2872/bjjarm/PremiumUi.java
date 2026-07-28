@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.text.InputType;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-/** Shared visual system: warm background, strong typography and adaptive controls. */
+/** Shared visual system: warm background, strong typography and controls without clipped labels. */
 public final class PremiumUi {
     public static final int BG = Color.rgb(244, 241, 235);
     public static final int SURFACE = Color.rgb(255, 253, 249);
@@ -201,11 +200,17 @@ public final class PremiumUi {
         return button(context, value, ACCENT_DARK, Color.WHITE, 15, 54, 0, Color.TRANSPARENT);
     }
 
+    /** Compact navigation control: no auto-size, no ellipsis and minimal horizontal padding. */
     public static Button navButton(Context context, String value, boolean selected) {
-        return button(context, value,
-                selected ? Color.WHITE : MUTED,
-                selected ? ACCENT : SURFACE,
-                12, 50, selected ? 0 : 1, selected ? Color.TRANSPARENT : BORDER);
+        Button button = button(context, value,
+                ACCENT_DARK,
+                selected ? ACCENT_SOFT : SURFACE,
+                11, 50, selected ? 0 : 1, selected ? Color.TRANSPARENT : BORDER);
+        button.setMaxLines(1);
+        button.setPadding(dp(context, 4), dp(context, 7), dp(context, 4), dp(context, 7));
+        button.setCompoundDrawablesWithIntrinsicBounds(navIcon(value), 0, 0, 0);
+        button.setCompoundDrawablePadding(dp(context, 3));
+        return button;
     }
 
     public static Button dangerButton(Context context, String value) {
@@ -223,21 +228,24 @@ public final class PremiumUi {
         button.setGravity(Gravity.CENTER);
         button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         button.setSingleLine(false);
-        button.setMaxLines(2);
+        button.setMaxLines(3);
+        button.setEllipsize(null);
+        button.setHorizontallyScrolling(false);
+        button.setMinWidth(0);
+        button.setMinimumWidth(0);
         button.setMinHeight(dp(context, minHeight));
         button.setMinimumHeight(dp(context, minHeight));
-        button.setPadding(dp(context, 13), dp(context, 7), dp(context, 13), dp(context, 7));
-
-        // Android requires max auto-size text to be strictly greater than min.
-        // Navigation buttons use 12sp, so the old fixed 12..textSize range became
-        // 12..12 and crashed the dashboard immediately after profile saving.
-        int autoSizeMin = Math.max(9, textSize - 3);
-        int autoSizeMax = Math.max(autoSizeMin + 1, textSize);
-        button.setAutoSizeTextTypeUniformWithConfiguration(
-                autoSizeMin, autoSizeMax, 1, TypedValue.COMPLEX_UNIT_SP);
-
+        button.setPadding(dp(context, 12), dp(context, 10), dp(context, 12), dp(context, 10));
+        button.setLineSpacing(0, 1.02f);
         button.setBackground(rounded(fill, 16, stroke, strokeColor));
         return button;
+    }
+
+    private static int navIcon(String value) {
+        if ("Неделя".equals(value)) return R.drawable.ic_nav_week;
+        if ("Дневник".equals(value)) return R.drawable.ic_nav_diary;
+        if ("Профиль".equals(value)) return R.drawable.ic_nav_profile;
+        return R.drawable.ic_nav_today;
     }
 
     public static EditText input(Context context, String hint, String value, int inputType) {
