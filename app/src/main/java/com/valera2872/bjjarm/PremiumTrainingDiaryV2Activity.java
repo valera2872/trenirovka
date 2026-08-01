@@ -1,7 +1,7 @@
 package com.valera2872.bjjarm;
 
 import android.app.Activity;
-import android.app.ActivityNotFoundException;
+import android.content.ActivityNotFoundException;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
