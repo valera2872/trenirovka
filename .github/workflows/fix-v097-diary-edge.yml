@@ -17,39 +17,17 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Preserve session labels and count only technique-active days
+      - name: Preserve labels and count only technique-active days
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('app/src/main/java/com/valera2872/bjjarm/PremiumTrainingDiaryV2Activity.java')
-          text = path.read_text(encoding='utf-8')
-          text = text.replace('"Тренировка", "Открытая тренировка", "Индивидуальная работа", "Соревнование"',
-                              '"Тренировка", "Открытый ковёр", "Индивидуальная работа", "Соревнование"')
-          old = '''            totals.attempts += Math.max(0, item.optInt("attempts"));
-            totals.successes += Math.max(0, item.optInt("successes"));
-            totals.finishes += Math.max(0, item.optInt("finishes"));
-            String day = dayKey(timestamp);
-            totals.days.add(day);
-            if (totals.latestDay == null || day.compareTo(totals.latestDay) > 0) totals.latestDay = day;'''
-          new = '''            int itemAttempts = Math.max(0, item.optInt("attempts"));
-            int itemSuccesses = Math.max(0, item.optInt("successes"));
-            int itemFinishes = Math.max(0, item.optInt("finishes"));
-            totals.attempts += itemAttempts;
-            totals.successes += itemSuccesses;
-            totals.finishes += itemFinishes;
-            if (itemAttempts > 0 || itemSuccesses > 0 || itemFinishes > 0) {
-                String day = dayKey(timestamp);
-                totals.days.add(day);
-                if (totals.latestDay == null || day.compareTo(totals.latestDay) > 0) totals.latestDay = day;
-            }'''
-          if old not in text:
-              raise SystemExit('Expected counter block was not found')
-          text = text.replace(old, new)
-          path.write_text(text, encoding='utf-8')
-          PY
+          FILE='app/src/main/java/com/valera2872/bjjarm/PremiumTrainingDiaryV2Activity.java'
+          sed -i 's/Открытая тренировка/Открытый ковёр/' "$FILE"
+          sed -i 's@            totals.days.add(day);@            if (item.optInt("attempts") > 0 || item.optInt("successes") > 0 || item.optInt("finishes") > 0) totals.days.add(day);@' "$FILE"
+          sed -i 's@            if (totals.latestDay == null || day.compareTo(totals.latestDay) > 0) totals.latestDay = day;@            if ((item.optInt("attempts") > 0 || item.optInt("successes") > 0 || item.optInt("finishes") > 0) \&\& (totals.latestDay == null || day.compareTo(totals.latestDay) > 0)) totals.latestDay = day;@' "$FILE"
+          grep -q 'Открытый ковёр' "$FILE"
+          grep -q 'item.optInt("attempts") > 0' "$FILE"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add app/src/main/java/com/valera2872/bjjarm/PremiumTrainingDiaryV2Activity.java
+          git add "$FILE"
           git commit -m 'Fix 0.9.7 diary active-day recalculation'
           git push origin main
