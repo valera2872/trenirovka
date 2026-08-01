@@ -45,7 +45,7 @@ public class PremiumTrainingDiaryV2Activity extends Activity {
     private static final int REQUEST_VOICE = 9701;
 
     private static final String[] SESSION_TYPES = {
-            "Тренировка", "Открытая тренировка", "Индивидуальная работа", "Соревнование"
+            "Тренировка", "Открытый ковёр", "Индивидуальная работа", "Соревнование"
     };
 
     private static final String[] RESULTS = {
@@ -483,8 +483,8 @@ public class PremiumTrainingDiaryV2Activity extends Activity {
             totals.successes += Math.max(0, item.optInt("successes"));
             totals.finishes += Math.max(0, item.optInt("finishes"));
             String day = dayKey(timestamp);
-            totals.days.add(day);
-            if (totals.latestDay == null || day.compareTo(totals.latestDay) > 0) totals.latestDay = day;
+            if (item.optInt("attempts") > 0 || item.optInt("successes") > 0 || item.optInt("finishes") > 0) totals.days.add(day);
+            if ((item.optInt("attempts") > 0 || item.optInt("successes") > 0 || item.optInt("finishes") > 0) && (totals.latestDay == null || day.compareTo(totals.latestDay) > 0)) totals.latestDay = day;
         }
         return totals;
     }
