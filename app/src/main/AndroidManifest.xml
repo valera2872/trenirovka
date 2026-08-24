@@ -11,7 +11,7 @@
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-            android:name=".CombatPerformanceV100Activity"
+            android:name=".CombatPerformanceV101Activity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -19,6 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CombatPerformanceV100Activity" android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".PremiumDarkProfileActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".PremiumDarkDiaryActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".PremiumStrengthHubActivity" android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".CombatPerformanceV097Activity" android:screenOrientation="portrait" android:exported="false" />
