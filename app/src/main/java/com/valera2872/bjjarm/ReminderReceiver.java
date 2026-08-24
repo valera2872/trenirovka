@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV100Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV101Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -79,9 +79,8 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent);
 
-        try {
-            manager.notify(notificationId, builder.build());
-        } catch (SecurityException ignored) { }
+        try { manager.notify(notificationId, builder.build()); }
+        catch (SecurityException ignored) { }
     }
 
     private String cleanTitle(WeekPlanEngine.Task task) {
