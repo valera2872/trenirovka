@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +28,7 @@ public class WeeklyPlanV4Activity extends Activity {
     private int selectedStrengthSessions = 2;
     private String selectedEquipment = EQUIPMENT[1];
     private boolean showingSetup;
+    private boolean setupInitialized;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +52,14 @@ public class WeeklyPlanV4Activity extends Activity {
 
     private void showSetup() {
         showingSetup = true;
-        for (int i = 0; i < 7; i++) {
-            selectedTypes[i] = week.getString("day_type_" + i, defaultDayType(i));
+        if (!setupInitialized) {
+            for (int i = 0; i < 7; i++) {
+                selectedTypes[i] = week.getString("day_type_" + i, defaultDayType(i));
+            }
+            selectedStrengthSessions = Math.max(1, Math.min(2, week.getInt("strength_sessions", 2)));
+            selectedEquipment = week.getString("equipment", EQUIPMENT[1]);
+            setupInitialized = true;
         }
-        selectedStrengthSessions = Math.max(1, Math.min(2, week.getInt("strength_sessions", 2)));
-        selectedEquipment = week.getString("equipment", EQUIPMENT[1]);
 
         ScrollView scroll = DarkUi.scroll(this);
         LinearLayout page = DarkUi.page(this);
@@ -176,6 +179,7 @@ public class WeeklyPlanV4Activity extends Activity {
                 .putString("equipment", selectedEquipment);
         for (int i = 0; i < 7; i++) editor.putString("day_type_" + i, selectedTypes[i]);
         editor.apply();
+        setupInitialized = false;
         showPlan();
     }
 
@@ -185,6 +189,7 @@ public class WeeklyPlanV4Activity extends Activity {
             return;
         }
         showingSetup = false;
+        setupInitialized = false;
         ScrollView scroll = DarkUi.scroll(this);
         LinearLayout page = DarkUi.page(this);
         page.setPadding(DarkUi.dp(this, 16), DarkUi.dp(this, 18), DarkUi.dp(this, 16), DarkUi.dp(this, 36));
