@@ -54,3 +54,5 @@ jobs:
           git add "$MAIN" "$DIARY"
           git commit -m 'Fix premium 0.10.0 compile and text wrapping'
           git push origin main
+
+# updated to trigger after workflow registration
