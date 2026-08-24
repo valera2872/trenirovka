@@ -39,7 +39,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             manager.createNotificationChannel(channel);
         }
 
-        Intent openApp = new Intent(context, CombatPerformanceV097Activity.class);
+        Intent openApp = new Intent(context, CombatPerformanceV100Activity.class);
         openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context,
@@ -81,9 +81,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         try {
             manager.notify(notificationId, builder.build());
-        } catch (SecurityException ignored) {
-            // Notification permission may be disabled by the user.
-        }
+        } catch (SecurityException ignored) { }
     }
 
     private String cleanTitle(WeekPlanEngine.Task task) {
@@ -97,18 +95,10 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     private String cleanDetails(WeekPlanEngine.Task task) {
-        if ("setup".equals(task.kind)) {
-            return "Отметь обычные и тяжёлые тренировки, чтобы распределить персональную силовую нагрузку.";
-        }
-        if ("mat".equals(task.kind)) {
-            return "Посмотри текущую задачу, а после тренировки сохрани короткий разбор в дневнике.";
-        }
-        if ("heavy".equals(task.kind)) {
-            return "Дополнительную силовую сегодня не добавляем.";
-        }
-        if ("competition".equals(task.kind)) {
-            return "Без дополнительной силовой. После схватки сохрани результат и главный вывод в дневнике.";
-        }
+        if ("setup".equals(task.kind)) return "Отметь обычные и тяжёлые тренировки, чтобы распределить персональную силовую нагрузку.";
+        if ("mat".equals(task.kind)) return "Посмотри текущую задачу, а после тренировки сохрани короткий разбор в дневнике.";
+        if ("heavy".equals(task.kind)) return "Дополнительную силовую сегодня не добавляем.";
+        if ("competition".equals(task.kind)) return "Без дополнительной силовой. После схватки сохрани результат и главный вывод в дневнике.";
         return task.details;
     }
 }
